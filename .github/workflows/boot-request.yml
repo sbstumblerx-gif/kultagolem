@@ -1,0 +1,21 @@
+name: Kultagolem boot request
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  boot-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send boot request
+        env:
+          APP_URL: https://kultagolem.onrender.com
+          REQUEST_NUMBER: ${{ github.run_number }}
+        run: |
+          curl --fail --silent --show-error \
+            --retry 3 --retry-delay 5 \
+            -X POST "${APP_URL}/boot_request" \
+            -H "Content-Type: application/json" \
+            --data "{\"number\":${REQUEST_NUMBER}}"
