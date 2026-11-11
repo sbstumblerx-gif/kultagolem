@@ -84,16 +84,15 @@ async def publish_rules():
 
 
 @bot.event
-async def setup_hook():
-    # Register the application command directly to this server.
-    guild = discord.Object(id=GUILD_ID)
-    bot.tree.copy_global_to(guild=guild)
-    synced = await bot.tree.sync(guild=guild)
-    print(f"Synced {len(synced)} slash command(s) to guild {GUILD_ID}.", flush=True)
-
-
-@bot.event
 async def on_ready():
+    # Sync once per process; on_ready can run again after reconnects.
+    if not getattr(bot, "commands_synced", False):
+        guild = discord.Object(id=GUILD_ID)
+        bot.tree.copy_global_to(guild=guild)
+        synced = await bot.tree.sync(guild=guild)
+        bot.commands_synced = True
+        print(f"Synced {len(synced)} slash command(s) to guild {GUILD_ID}.", flush=True)
+
     print(f"Kultagolem is online as {bot.user} (ID: {bot.user.id})", flush=True)
 
 
