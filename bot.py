@@ -63,7 +63,7 @@ bot = commands.Bot(command_prefix=".", intents=intents, case_insensitive=True)
 
 
 def create_rules_embed():
-    description = "\\n\\n".join(
+    description = "\n\n".join(
         f"**{number}.** {rule}" for number, rule in RULES.items()
     )
     embed = discord.Embed(
